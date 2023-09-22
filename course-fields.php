@@ -13,7 +13,7 @@ include "../connection.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <title>Admin Dashboard</title>
+    <title>Course Fields - Admin Dashboard</title>
 </head>
 
 <body>
@@ -71,7 +71,62 @@ include "../connection.php";
             </ul>
         </section>
         <main class="main__content">
+            <div class="login-container-2">
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" class="login__form">
+                    <h3 class="heading-3">Add Course Field</h3>
+                    <div class="input">
+                        <label class="label__text">Field Name:</label>
+                        <input type="text" class="input__box" name="f_name" required>
+                    </div>
+                    <div class="input input__btn">
+                        <input type="submit" value="Add Field" class="btn" name="add_field">
+                    </div>
+                </form>
+                <?php
+                if (isset($_POST['add_field'])) {
+                    $fieldName = mysqli_real_escape_string($con, $_POST['f_name']);
 
+                    $sin = "INSERT INTO `course_field` (`field_name`) VALUES ('$fieldName')";
+                    $run = mysqli_query($con, $sin);
+                    if ($run) {
+                        echo '<p class="form_success_msg"><b>Added Successfully</b></p>';
+                    } else {
+                        echo '<p class="form_error_msg"><b>Opps! Not Added</b></p>';
+                    }
+                }
+                ?>
+            </div>
+
+            <div class="view__container">
+                <h3 class="heading-3">View Course Fields</h3>
+                <div class="table__container">
+                    <table class="table">
+                        <thead>
+                            <th>Sr. No.</th>
+                            <th>Field ID</th>
+                            <th>Field Name</th>
+                            <th>Added On</th>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $q1 = "Select * from course_field";
+                            $r1 = mysqli_query($con, $q1);
+                            $count = 1;
+                            while ($row1 = mysqli_fetch_array($r1)) { ?>
+                            <tr>
+                                <td><?php echo $count; ?></td>
+                                <td><?php echo $row1['field_id']; ?></td>
+                                <td><?php echo $row1['field_name']; ?></td>
+                                <td><?php echo $row1['added_on']; ?></td>
+                            </tr>
+                            <?php
+                                $count++;
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </main>
     </div>
 </body>
